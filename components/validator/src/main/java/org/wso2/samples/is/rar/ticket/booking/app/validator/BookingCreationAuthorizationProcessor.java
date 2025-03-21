@@ -78,7 +78,7 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
     public boolean isEqualOrSubset(AuthorizationDetail requestedAuthorizationDetail,
                                    AuthorizationDetails existingAuthorizationDetails) {
 
-        return false;
+        return !existingAuthorizationDetails.getDetailsByType(BOOKING_CREATION_AUTHORIZATION_PROCESSOR).isEmpty();
     }
 
     @Override
@@ -89,17 +89,11 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
                 assignLimit(GOLD_FILM_BOOKING_LIMIT, authorizationDetailsContext);
             } else if (StringUtils.equals(bookingType, Constant.BookingType.CONCERT.getBookingType())) {
                 assignLimit(GOLD_CONCERT_BOOKING_LIMIT, authorizationDetailsContext);
-            } else {
-                assignLimit(0, authorizationDetailsContext);
             }
         } else if (StringUtils.equals(accountType, Constant.UserType.SILVER.getUserType())) {
             if (StringUtils.equals(bookingType, Constant.BookingType.FILM.getBookingType())) {
                 assignLimit(SILVER_FILM_BOOKING_LIMIT, authorizationDetailsContext);
-            } else {
-                assignLimit(0, authorizationDetailsContext);
             }
-        } else {
-            assignLimit(0, authorizationDetailsContext);
         }
 
         return authorizationDetailsContext.getAuthorizationDetail();
