@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.wso2.samples.is.rar.ticket.booking.app.validator"},{"l":"org.wso2.samples.is.rar.ticket.booking.app.validator.internal"}]

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<checkstyle version="8.19">
-<file name="/Users/dilshanse/Documents/Components/ticket-booking-app-rar-validator/components/validator/src/main/java/org/wso2/samples/is/rar/ticket/booking/app/validator/BookingCreationAuthorizationProcessor.java">
-</file>
-<file name="/Users/dilshanse/Documents/Components/ticket-booking-app-rar-validator/components/validator/src/main/java/org/wso2/samples/is/rar/ticket/booking/app/validator/internal/TicketBookingAuthorizationServiceComponent.java">
-</file>
-<file name="/Users/dilshanse/Documents/Components/ticket-booking-app-rar-validator/components/validator/src/main/java/org/wso2/samples/is/rar/ticket/booking/app/validator/Constant.java">
-</file>
-</checkstyle>

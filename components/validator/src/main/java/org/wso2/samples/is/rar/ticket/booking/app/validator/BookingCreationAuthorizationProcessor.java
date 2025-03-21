@@ -29,6 +29,9 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2ServerException;
 import org.wso2.carbon.identity.oauth2.rar.core.AuthorizationDetailsProcessor;
 import org.wso2.carbon.identity.oauth2.rar.model.AuthorizationDetailsContext;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.ALLOWED_AMOUNT_KEY;
 import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.BOOKING_CREATION_AUTHORIZATION_PROCESSOR;
 import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.BOOKING_TYPE_KEY;
@@ -110,7 +113,7 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
      */
     private void assignLimit(int limit, AuthorizationDetailsContext authorizationDetails) {
 
-        JSONObject limitDetails = new JSONObject();
+        Map<String, Object> limitDetails = new HashMap<>();
         limitDetails.put(LIMIT_KEY, limit);
         limitDetails.put(CURRENCY_KEY, SUPPORTED_CURRENCY);
         authorizationDetails.getAuthorizationDetail().setDetail(ALLOWED_AMOUNT_KEY, limitDetails);
