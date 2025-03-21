@@ -43,6 +43,7 @@
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.wso2.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.ops4j.pax.logging</groupId>
@@ -53,11 +54,13 @@
                 <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
                 <version>${org.wso2.carbon.identity.inbound.auth.oauth2.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.rar</artifactId>
                 <version>${org.wso2.carbon.identity.inbound.auth.oauth2.version}</version>
+                <scope>provided</scope>
             </dependency>
             <!--osgi dependencies-->
             <dependency>

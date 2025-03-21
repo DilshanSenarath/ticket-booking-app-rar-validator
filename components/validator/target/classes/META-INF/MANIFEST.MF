@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1742490744516
+Bnd-LastModified: 1742552985803
 Build-Jdk: 11.0.19
 Built-By: dilshanse
 Bundle-Description: WSO2 is an open source application development softw
@@ -17,8 +17,11 @@ Created-By: Apache Maven Bundle Plugin
 DynamicImport-Package: *
 Export-Package: org.wso2.samples.is.rar.ticket.booking.app.validator;ver
  sion="1.0.0.SNAPSHOT"
+Import-Package: org.apache.commons.logging;version="[1.2,2)",org.json;ve
+ rsion="[3.0,4)",org.osgi.framework;version="[1.7,2)",org.osgi.service.c
+ omponent;version="[1.2,2)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
-SCM-Revision: 2942ecb8069179f8ca68b2f1e318459ae43ee6d9
+SCM-Revision: ee69d0e14698a7bc11aefab291b61491fb014a5d
 Service-Component: OSGI-INF/org.wso2.samples.is.rar.ticket.booking.app.v
  alidator.component.xml
 Tool: Bnd-3.2.0.201605172007

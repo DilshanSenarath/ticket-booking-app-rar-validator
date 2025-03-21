@@ -69,10 +69,15 @@
                             org.wso2.samples.is.rar.ticket.booking.app.validator.internal
                         </Private-Package>
                         <Import-Package>
+                            org.apache.commons.logging;version="${org.apache.commons.logging.version.range}",
+                            org.json;version="${org.json.version.range}",
+                            org.osgi.framework;version="${org.osgi.framework.version.range}",
+                            org.osgi.service.component;version="${org.osgi.service.component.version.range}",
+                            org.wso2.carbon.identity.inbound.auth.oauth2.*;version="${org.wso2.carbon.identity.inbound.auth.oauth2.version.range}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.samples.is.rar.ticket.booking.app.validator.internal,
-                            org.wso2.samples.is.rar.ticket.booking.app.validator.*; version="${booking.creation.pkg.exp.version}",
+                            org.wso2.samples.is.rar.ticket.booking.app.validator.*; version="${project.version}",
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

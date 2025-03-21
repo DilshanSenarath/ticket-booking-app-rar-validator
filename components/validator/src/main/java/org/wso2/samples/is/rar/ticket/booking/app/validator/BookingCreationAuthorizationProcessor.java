@@ -18,8 +18,9 @@
 
 package org.wso2.samples.is.rar.ticket.booking.app.validator;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
-import org.wso2.carbon.identity.application.authentication.framework.exception.UserIdNotFoundException;
+import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 import org.wso2.carbon.identity.oauth.rar.exception.AuthorizationDetailsProcessingException;
 import org.wso2.carbon.identity.oauth.rar.model.AuthorizationDetail;
 import org.wso2.carbon.identity.oauth.rar.model.AuthorizationDetails;
@@ -28,12 +29,24 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2ServerException;
 import org.wso2.carbon.identity.oauth2.rar.core.AuthorizationDetailsProcessor;
 import org.wso2.carbon.identity.oauth2.rar.model.AuthorizationDetailsContext;
 
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.ALLOWED_AMOUNT_KEY;
 import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.BOOKING_CREATION_AUTHORIZATION_PROCESSOR;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.BOOKING_TYPE_KEY;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.CURRENCY_KEY;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.GOLD_CONCERT_BOOKING_LIMIT;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.GOLD_FILM_BOOKING_LIMIT;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.LIMIT_KEY;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.SILVER_FILM_BOOKING_LIMIT;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.SUPPORTED_CURRENCY;
+import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.USER_TYPE_CLAIM_MAPPING;
 
 /**
  * This class is responsible for processing the authorization details of the booking creation request.
  */
 public class BookingCreationAuthorizationProcessor implements AuthorizationDetailsProcessor {
+
+    private String accountType;
+    private String bookingType;
 
     @Override
     public ValidationResult validate(AuthorizationDetailsContext authorizationDetailsContext)
@@ -41,13 +54,15 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
 
         JSONObject authzDetailsObject = new JSONObject(authorizationDetailsContext.
                 getAuthorizationDetail().getDetails());
-        String userId;
-        try {
-            userId = authorizationDetailsContext.getAuthenticatedUser().getUserId();
-        } catch (UserIdNotFoundException e) {
-            throw new IdentityOAuth2ServerException(e.getMessage(), e);
+        bookingType = authzDetailsObject.getString(BOOKING_TYPE_KEY);
+        AuthenticatedUser authenticatedUser = authorizationDetailsContext.getAuthenticatedUser();
+        accountType = authenticatedUser.getUserAttributes().get(USER_TYPE_CLAIM_MAPPING);
+        if (StringUtils.isBlank(accountType) ||
+                (StringUtils.equals(accountType, Constant.UserType.SILVER.getUserType()) &&
+                        StringUtils.equals(bookingType, Constant.BookingType.CONCERT.getBookingType()))) {
+            return new ValidationResult(false, "User is not allowed to create a booking.", null);
         }
-        return new ValidationResult(true, "Access Evaluation performed Successfully.", null);
+        return new ValidationResult(true, "Ticket booking request validation performed Successfully.", null);
     }
 
     @Override
@@ -66,6 +81,38 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
     @Override
     public AuthorizationDetail enrich(AuthorizationDetailsContext authorizationDetailsContext) {
 
+        if (StringUtils.equals(accountType, Constant.UserType.GOLD.getUserType())) {
+            if (StringUtils.equals(bookingType, Constant.BookingType.FILM.getBookingType())) {
+                assignLimit(GOLD_FILM_BOOKING_LIMIT, authorizationDetailsContext);
+            } else if (StringUtils.equals(bookingType, Constant.BookingType.CONCERT.getBookingType())) {
+                assignLimit(GOLD_CONCERT_BOOKING_LIMIT, authorizationDetailsContext);
+            } else {
+                assignLimit(0, authorizationDetailsContext);
+            }
+        } else if (StringUtils.equals(accountType, Constant.UserType.SILVER.getUserType())) {
+            if (StringUtils.equals(bookingType, Constant.BookingType.FILM.getBookingType())) {
+                assignLimit(SILVER_FILM_BOOKING_LIMIT, authorizationDetailsContext);
+            } else {
+                assignLimit(0, authorizationDetailsContext);
+            }
+        } else {
+            assignLimit(0, authorizationDetailsContext);
+        }
+
         return authorizationDetailsContext.getAuthorizationDetail();
+    }
+
+    /**
+     * Assign the limit to the authorization details.
+     *
+     * @param limit Limit to be assigned.
+     * @param authorizationDetails Authorization details object.
+     */
+    private void assignLimit(int limit, AuthorizationDetailsContext authorizationDetails) {
+
+        JSONObject limitDetails = new JSONObject();
+        limitDetails.put(LIMIT_KEY, limit);
+        limitDetails.put(CURRENCY_KEY, SUPPORTED_CURRENCY);
+        authorizationDetails.getAuthorizationDetail().setDetail(ALLOWED_AMOUNT_KEY, limitDetails);
     }
 }
