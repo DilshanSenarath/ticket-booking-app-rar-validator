@@ -44,12 +44,9 @@ import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.SUPP
 import static org.wso2.samples.is.rar.ticket.booking.app.validator.Constant.USER_TYPE_CLAIM_MAPPING;
 
 /**
- * This class is responsible for processing the authorization details of the booking creation request.
+ * Contains operations which are responsible for processing the authorization details of the booking creation request.
  */
 public class BookingCreationAuthorizationProcessor implements AuthorizationDetailsProcessor {
-
-    private String accountType;
-    private String bookingType;
 
     @Override
     public ValidationResult validate(AuthorizationDetailsContext authorizationDetailsContext)
@@ -57,9 +54,9 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
 
         JSONObject authzDetailsObject = new JSONObject(authorizationDetailsContext.
                 getAuthorizationDetail().getDetails());
-        bookingType = authzDetailsObject.getString(BOOKING_TYPE_KEY);
+        String bookingType = authzDetailsObject.getString(BOOKING_TYPE_KEY);
         AuthenticatedUser authenticatedUser = authorizationDetailsContext.getAuthenticatedUser();
-        accountType = authenticatedUser.getUserAttributes().get(USER_TYPE_CLAIM_MAPPING);
+        String accountType = authenticatedUser.getUserAttributes().get(USER_TYPE_CLAIM_MAPPING);
         if (StringUtils.isBlank(accountType) ||
                 (StringUtils.equals(accountType, Constant.UserType.SILVER.getUserType()) &&
                         StringUtils.equals(bookingType, Constant.BookingType.CONCERT.getBookingType()))) {
@@ -83,6 +80,12 @@ public class BookingCreationAuthorizationProcessor implements AuthorizationDetai
 
     @Override
     public AuthorizationDetail enrich(AuthorizationDetailsContext authorizationDetailsContext) {
+
+        JSONObject authzDetailsObject = new JSONObject(authorizationDetailsContext.
+                getAuthorizationDetail().getDetails());
+        String bookingType = authzDetailsObject.getString(BOOKING_TYPE_KEY);
+        AuthenticatedUser authenticatedUser = authorizationDetailsContext.getAuthenticatedUser();
+        String accountType = authenticatedUser.getUserAttributes().get(USER_TYPE_CLAIM_MAPPING);
 
         if (StringUtils.equals(accountType, Constant.UserType.GOLD.getUserType())) {
             if (StringUtils.equals(bookingType, Constant.BookingType.FILM.getBookingType())) {
